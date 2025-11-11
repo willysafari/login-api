@@ -4,7 +4,29 @@ import { Link, Outlet } from 'react-router-dom';
 import { AppContext } from '../Context/AppContext.jsx';
 
 export default function Layout() {
-    const {user} = useContext(AppContext);
+    const { token, user, setToken, setUser } = useContext(AppContext);
+
+    async function handlerLogout(e) {
+        e.preventDefault();
+        const res = await fetch('/api/logout', {
+            method: "POST",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (res.ok) {
+
+            console.log("Logout successfully");
+            setUser(null);
+            setToken(null);
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+        } else {
+            console.log("Logout failed");
+        }
+
+    }
     return (
         <>
             <header>
@@ -12,11 +34,13 @@ export default function Layout() {
 
                     <Link to="/" className="nav-link">Home</Link>
                     {user ? (
-                        <div className="space-x-2">
-                               <span><p className=" text-slate-400 text-xs">Welcome, {user.name}</p></span>
-                            <Link to="/logout" className='nav-link'>Logout</Link>
+                        <div className="flex items-center space-x-2">
+                            <span><p className=" text-slate-400 text-xs">Welcome, {user.name}</p></span>
+                            <form onSubmit={handlerLogout} className='inline'>
+                                <button className='nav-link'>Logout</button>
+                            </form>
                         </div>
-                     
+
                     ) :
                         <div className="space-x-2">
                             <Link to="/login" className='nav-link'>Login</Link>

@@ -5,16 +5,18 @@ import { AppContext } from "../../Context/AppContext.jsx";
 
 
 export default function Login() {
-  const { setToken,setUser } = useContext(AppContext);
+  const { setToken } = useContext(AppContext);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
+    password: ""
   });
+ 
+
 
   const [errors, setErrors] = useState({});
 
-  async function handleLogin(e) {
+  async function handlerLogin(e) {
 
     e.preventDefault();
 
@@ -28,27 +30,18 @@ export default function Login() {
 
     const data = await res.json();
 
+    console.log(data.token);
+
+
     if (res.ok) {
-      console.log("Login successful ");
-      setToken(data.token);
-      setUser(data.user);
-      localStorage.setItem("token", data.token);
+      console.log("Login successfully");
+      setToken(data.access_token);
+      localStorage.setItem("token", data.access_token);
       navigate("/");
     } else {
-      setErrors(data.errors);
-    }
+      setErrors(data);
+    } 
 
-    // if(data.errors){
-    //   setErrors(data.errors);
-    // }else{
-    //   setToken(data.token);
-    //   setUser(data.user);
-    //   localStorage.setItem("token", data.token);
-    //   // navigate("/");
-    // }
-
-
-   
 
   }
 
@@ -56,14 +49,15 @@ export default function Login() {
     <>
       <h2 className="title">Login Page</h2>
 
-      <form onSubmit={handleLogin} className="w-1/2 mx-auto space-y-6">
-
+      <form onSubmit={handlerLogin} className="w-1/2 mx-auto space-y-6">
+      
         <div>
-          <input type="email" placeholder="email"
+          <input type="text" placeholder="email"
             value={formData.email} onChange={(e) => setFormData({
               ...formData, email: e.target.value
             })} />
           {errors.email && <p className="error">{errors.email[0]}</p>}
+
         </div>
 
         <div>
@@ -73,7 +67,7 @@ export default function Login() {
             })} />
           {errors.password && <p className="error">{errors.password[0]}</p>}
         </div>
-
+    
         <button className="primary-btn">Login</button>
       </form>
     </>
