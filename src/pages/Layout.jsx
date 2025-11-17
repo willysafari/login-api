@@ -32,13 +32,14 @@ export default function Layout() {
             <header>
                 <nav>
 
-                    <Link to="/" className="nav-link">Home</Link>
+                <Link to="/" className="nav-link">Home</Link>
                     {user ? (
                         <div className="flex items-center space-x-2">
                             <span><p className=" text-slate-400 text-xs">Welcome, {user.name}</p></span>
                             <form onSubmit={handlerLogout} className='inline'>
                                 <button className='nav-link'>Logout</button>
                             </form>
+                             <Link to="/create" className='nav-link'>Create Post</Link>
                         </div>
 
                     ) :
